@@ -10,12 +10,12 @@ int assert_equals_int(int actual, int expected, const char * test, const char * 
 	printf("[nunit] >> Testing: %s\n", test);
 	
 	if(actual != expected){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -26,12 +26,12 @@ int assert_equals_char(char actual, char expected, const char * test, const char
 	printf("[nunit] >> Testing: %s\n", test);
 	
 	if(actual != expected){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -42,12 +42,12 @@ int assert_equals_short(short actual, short expected, const char * test, const c
 	printf("[nunit] >> Testing: %s\n", test);
 	
 	if(actual != expected){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -58,12 +58,12 @@ int assert_equals_long(long actual, long expected, const char * test, const char
 	printf("[nunit] >> Testing: %s\n", test);
 	
 	if(actual != expected){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -74,12 +74,12 @@ int assert_equals_long_long(long long actual, long long expected, const char * t
 	printf("[nunit] >> Testing: %s\n", test);
 	
 	if(actual != expected){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -93,12 +93,12 @@ int assert_equals_float(float actual, float expected, float epsilon, const char 
 	if(epsilon < 0) epsilon = -epsilon;
 	
 	if(actual > expected + epsilon || actual < expected - epsilon){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -111,12 +111,12 @@ int assert_equals_double(double actual, double expected, double epsilon, const c
 	if(epsilon < 0) epsilon = -epsilon;
 	
 	if(actual > expected + epsilon || actual < expected - epsilon){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -128,12 +128,12 @@ int assert_equals_str(char * actual, char * expected, const char * test, const c
 	printf("[nunit] >> Testing: %s\n", test);
 	
 	if(strcmp(actual, expected)){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -149,14 +149,14 @@ int assert_equals_ptr(void * actual, void * expected, size_t n_bytes, const char
 	
 	for(i = 0; i < n_bytes; i++){
 		if(c_actual[i] != c_expect[i]){
-			printf("[nunit] >> %s: ERROR: ", test);
+			printf("[nunit] >> >> %s: ERROR: ", test);
 			vprintf(msg, ap);
 			printf("\n");
 			return -1;
 		}
 	}
 
-	printf("[nunit] >> %s: OK\n", test);
+	printf("[nunit] >> >> %s: OK\n", test);
 	return 0;
 }
 int assert_equals_obj(void * actual, void * expected, int (* comp)(void *, void*), const char * test, const char * msg, ...){
@@ -166,16 +166,16 @@ int assert_equals_obj(void * actual, void * expected, int (* comp)(void *, void*
 	printf("[nunit] >> Testing: %s\n", test);
 	
 	if((*comp)(actual, expected)){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 
-	printf("[nunit] >> %s: OK\n", test);
+	printf("[nunit] >> >> %s: OK\n", test);
 	return 0;
 }
 
@@ -186,12 +186,12 @@ int assert_not_equals_int(int actual, int expected, const char * test, const cha
 	printf("[nunit] >> Testing: %s\n", test);
 	
 	if(actual == expected){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -202,12 +202,12 @@ int assert_not_equals_char(char actual, char expected, const char * test, const 
 	printf("[nunit] >> Testing: %s\n", test);
 	
 	if(actual == expected){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -218,12 +218,12 @@ int assert_not_equals_short(short actual, short expected, const char * test, con
 	printf("[nunit] >> Testing: %s\n", test);
 	
 	if(actual == expected){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -234,12 +234,12 @@ int assert_not_equals_long(long actual, long expected, const char * test, const 
 	printf("[nunit] >> Testing: %s\n", test);
 	
 	if(actual == expected){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -250,12 +250,12 @@ int assert_not_equals_long_long(long long actual, long long expected, const char
 	printf("[nunit] >> Testing: %s\n", test);
 	
 	if(actual == expected){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -269,12 +269,12 @@ int assert_not_equals_float(float actual, float expected, float epsilon, const c
 	if(epsilon < 0) epsilon = -epsilon;
 	
 	if(actual <= expected + epsilon && actual >= expected - epsilon){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -287,12 +287,12 @@ int assert_not_equals_double(double actual, double expected, double epsilon, con
 	if(epsilon < 0) epsilon = -epsilon;
 	
 	if(actual <= expected + epsilon && actual >= expected - epsilon){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -304,12 +304,12 @@ int assert_not_equals_str(char * actual, char * expected, const char * test, con
 	printf("[nunit] >> Testing: %s\n", test);
 	
 	if(!strcmp(actual, expected)){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 }
@@ -325,14 +325,14 @@ int assert_not_equals_ptr(void * actual, void * expected, size_t n_bytes, const 
 	
 	for(i = 0; i < n_bytes; i++){
 		if(c_actual[i] == c_expect[i]){
-			printf("[nunit] >> %s: ERROR: ", test);
+			printf("[nunit] >> >> %s: ERROR: ", test);
 			vprintf(msg, ap);
 			printf("\n");
 			return -1;
 		}
 	}
 
-	printf("[nunit] >> %s: OK\n", test);
+	printf("[nunit] >> >> %s: OK\n", test);
 	return 0;
 }
 int assert_not_equals_obj(void * actual, void * expected, int (* comp)(void *, void*), const char * test, const char * msg, ...){
@@ -342,15 +342,15 @@ int assert_not_equals_obj(void * actual, void * expected, int (* comp)(void *, v
 	printf("[nunit] >> Testing: %s\n", test);
 	
 	if(!(*comp)(actual, expected)){
-		printf("[nunit] >> %s: ERROR: ", test);
+		printf("[nunit] >> >> %s: ERROR: ", test);
 		vprintf(msg, ap);
 		printf("\n");
 		return -1;
 	}else{
-		printf("[nunit] >> %s: OK\n", test);
+		printf("[nunit] >> >> %s: OK\n", test);
 		return 0;
 	}
 
-	printf("[nunit] >> %s: OK\n", test);
+	printf("[nunit] >> >> %s: OK\n", test);
 	return 0;
 }
