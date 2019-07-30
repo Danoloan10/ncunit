@@ -13,6 +13,11 @@ To uninstall:
 ```
 sudo make uninstall
 ```
+If anything fails, first try to clean and recompile, then reinstall:
+```
+make clean; make
+sudo make install
+```
 
 You could have written this library. Now you don't have to.
 
