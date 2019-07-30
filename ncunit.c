@@ -171,14 +171,17 @@ int assert_mem_access(void * ptr, size_t n, const char * test, const char * msg,
 	va_start(ap, msg);
 
 	struct sigaction act;
+	struct sigaction oact;
 	act.sa_handler = sigsegv;
 	act.sa_flags = 0;
-	sigaction(SIGSEGV, &act, NULL);
+	sigaction(SIGSEGV, &act, &oact);
 
 	int segv;
 	for(int i = 0; (i < n) && !(segv = setjmp(env)); i++) {
 		uint8_t u = *(((uint8_t*) ptr) + i);
 	}
+
+	sigaction(SIGSEGV, &oact, NULL);
 	
 	if(segv) {
 		print_error(test, msg, ap);
@@ -339,14 +342,17 @@ int assert_not_mem_access(void * ptr, size_t n, const char * test, const char * 
 	va_start(ap, msg);
 
 	struct sigaction act;
+	struct sigaction oact;
 	act.sa_handler = sigsegv;
 	act.sa_flags = 0;
-	sigaction(SIGSEGV, &act, NULL);
+	sigaction(SIGSEGV, &act, &oact);
 
 	int segv;
 	for(int i = 0; (i < n) && !(segv = setjmp(env)); i++) {
 		uint8_t u = *(((uint8_t*) ptr) + i);
 	}
+
+	sigaction(SIGSEGV, &oact, NULL);
 	
 	if(!segv) {
 		print_error(test, msg, ap);
