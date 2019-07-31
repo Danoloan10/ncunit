@@ -1,5 +1,5 @@
-**ncunit**
-
+ncunit
+======
 Minimal (nano) C unit testing library.
 
 This library defines a model to implement unit tests, as well as some helper functions that might be useful when doing so, like byte-by-byte comparisons of random memory (see `equals_ptr`) and check of access to memory (see `mem_access`).
