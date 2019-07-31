@@ -1,143 +1,49 @@
-#include "nunit.h"
+#include "ncunit.h"
 #include <setjmp.h>
 #include <signal.h>
-#include <stdarg.h>
 #include <stdint.h>
-#include <string.h>
 #include <stdio.h>
 
-jmp_buf env;
-void sigsegv(int sig) {
+static jmp_buf env;
+static void sigsegv(int sig) {
 	longjmp(env, 1);
 }
 
-void print_error(const char * test, const char * msg, va_list ap) {
-	printf("[nunit] XX %s: ERROR: ", test);
-	vprintf(msg, ap);
-	printf("\n");
+static void print_header(const char * test) {
+	fprintf(stderr, "[nunit] >> Test: %s", test);
+	fprintf(stderr, "\n");
 }
 
-void print_ok(const char * test) {
-	printf("[nunit] $$ %s: OK\n", test);
+static void print_error(const char * test, const char * msg) {
+	fprintf(stderr, "[nunit] XX %s: ERROR: ", test);
+	fprintf(stderr, msg);
+	fprintf(stderr, "\n");
 }
 
-int assert_true(int boolean, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
-	if(!boolean){
-		print_error(test, msg, ap);	
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
+static void print_ok(const char * test) {
+	fprintf(stderr, "[nunit] $$ %s: OK\n", test);
 }
-int assert_equals_int(int actual, int expected, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
 
-	if(actual != expected){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
-}
-int assert_equals_char(char actual, char expected, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
-	if(actual != expected){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
-}
-int assert_equals_short(short actual, short expected, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
-	if(actual != expected){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
-}
-int assert_equals_long(long actual, long expected, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
-	if(actual != expected){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
-}
-int assert_equals_long_long(long long actual, long long expected, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
-	if(actual != expected){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
+void execute_test(char * (*test)(), char * name) {
+	char * result = (*test)();
+	print_header(name);
+	if (result == NULL) {
+		print_ok(name);
+	} else {
+		print_error(name, result);
 	}
 }
 
-int assert_equals_float(float actual, float expected, float epsilon, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
+int equals_float(float actual, float expected, float epsilon){
 	if(epsilon < 0) epsilon = -epsilon;
-	
-	if(actual > expected + epsilon || actual < expected - epsilon){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
+	return actual <= expected + epsilon && actual >= expected - epsilon;
 }
-int assert_equals_double(double actual, double expected, double epsilon, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
+int equals_double(double actual, double expected, double epsilon){
 	if(epsilon < 0) epsilon = -epsilon;
-	
-	if(actual > expected + epsilon || actual < expected - epsilon){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
+	return actual <= expected + epsilon && actual >= expected - epsilon;
 }
 
-int assert_equals_str(char * actual, char * expected, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
-	if(strcmp(actual, expected)){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
-}
-int assert_equals_ptr(void * actual, void * expected, size_t n_bytes, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
+int equals_ptr(void * actual, void * expected, size_t n_bytes) {
 	int i;
 
 	char * c_actual = (char *) actual;
@@ -145,31 +51,14 @@ int assert_equals_ptr(void * actual, void * expected, size_t n_bytes, const char
 	
 	for(i = 0; i < n_bytes; i++){
 		if(c_actual[i] != c_expect[i]){
-			print_error(test, msg, ap);
-			return -1;
+			return 0;
 		}
 	}
 
-	print_ok(test);
-	return 0;
-}
-int assert_equals_obj(void * actual, void * expected, int (* comp)(void *, void*), const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
-	if((*comp)(actual, expected)){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
+	return 1;
 }
 
-int assert_mem_access(void * ptr, size_t n, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
+int mem_access(void * ptr, size_t n){
 	struct sigaction act;
 	struct sigaction oact;
 	act.sa_handler = sigsegv;
@@ -184,131 +73,22 @@ int assert_mem_access(void * ptr, size_t n, const char * test, const char * msg,
 	sigaction(SIGSEGV, &oact, NULL);
 	
 	if(segv) {
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
 		return 0;
+	}else{
+		return 1;
 	}
 }
 
-int assert_false(int boolean, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
-	if(boolean){
-		print_error(test, msg, ap);	
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
-}
-int assert_not_equals_int(int actual, int expected, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
-	if(actual == expected){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
-}
-int assert_not_equals_char(char actual, char expected, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
-	if(actual == expected){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
-}
-int assert_not_equals_short(short actual, short expected, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
-	if(actual == expected){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
-}
-int assert_not_equals_long(long actual, long expected, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
-	if(actual == expected){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
-}
-int assert_not_equals_long_long(long long actual, long long expected, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
-	if(actual == expected){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
-}
-
-int assert_not_equals_float(float actual, float expected, float epsilon, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
+int not_equals_float(float actual, float expected, float epsilon){
 	if(epsilon < 0) epsilon = -epsilon;
-	
-	if(actual <= expected + epsilon && actual >= expected - epsilon){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
+	return actual > expected + epsilon || actual < expected - epsilon;
 }
-int assert_not_equals_double(double actual, double expected, double epsilon, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
+int not_equals_double(double actual, double expected, double epsilon){
 	if(epsilon < 0) epsilon = -epsilon;
-	
-	if(actual <= expected + epsilon && actual >= expected - epsilon){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
+ 	return actual > expected + epsilon || actual < expected - epsilon;
 }
 
-int assert_not_equals_str(char * actual, char * expected, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
-	if(!strcmp(actual, expected)){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
-}
-int assert_not_equals_ptr(void * actual, void * expected, size_t n_bytes, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
+int not_equals_ptr(void * actual, void * expected, size_t n_bytes){
 	int i;
 
 	char * c_actual = (char *) actual;
@@ -316,31 +96,14 @@ int assert_not_equals_ptr(void * actual, void * expected, size_t n_bytes, const 
 	
 	for(i = 0; i < n_bytes; i++){
 		if(c_actual[i] == c_expect[i]){
-			print_error(test, msg, ap);
-			return -1;
+			return 0;
 		}
 	}
 
-	print_ok(test);
-	return 0;
-}
-int assert_not_equals_obj(void * actual, void * expected, int (* comp)(void *, void*), const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
-	if(!(*comp)(actual, expected)){
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
-		return 0;
-	}
+	return 1;
 }
 
-int assert_not_mem_access(void * ptr, size_t n, const char * test, const char * msg, ...){
-	va_list ap;
-	va_start(ap, msg);
-
+int not_mem_access(void * ptr, size_t n){
 	struct sigaction act;
 	struct sigaction oact;
 	act.sa_handler = sigsegv;
@@ -355,10 +118,8 @@ int assert_not_mem_access(void * ptr, size_t n, const char * test, const char * 
 	sigaction(SIGSEGV, &oact, NULL);
 	
 	if(!segv) {
-		print_error(test, msg, ap);
-		return -1;
-	}else{
-		print_ok(test);
 		return 0;
+	}else{
+		return 1;
 	}
 }

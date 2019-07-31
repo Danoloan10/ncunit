@@ -2,109 +2,74 @@
 #define NUNIT
 
 #include <stddef.h>
+#include <stdio.h>
 
-/* This function checks whether the integer <<boolean>> represents 'true'
- *      If it is not 0, the function returns 0
- *      If it is 0, the the formatted message <<msg, ...>>
- * 		is printed and -1 is returned
+/*
+ * This macro defines an assertion.
+ * Assertions are only to be used inside of tests (see execute_test)
  */
-int assert_true(int boolean, const char * test, const char * msg, ...);
-/* This function compares the two integers <<actual>> and <<expected>>
- * 	If they are equal, the function returns 0
- * 	If they are not equal, the formatted message <<msg, ...>>
- * 		is printed and -1 is returned
+#define assert(cond, ...) { \
+	if(!cond) { \
+		int __size = snprintf(NULL, 0, __VA_ARGS__); \
+		char * __msg = malloc(__size + 1); \
+		sprintf(__msg, __VA_ARGS__); \
+		return __msg; \
+	} \
+}
+
+/*
+ * This function executes a test. A test is a function of the form:
+ * 	(char *) test()
+ * This test function shall return NULL when successful, and a string representing
+ * the error message otherwise. It is recommended to user the macro 'assert' before defined.
+ * <<name>> is the name of the test run, used for output.
  */
-int assert_equals_int(int actual, int expected, const char * test, const char * msg, ...);
-/* This function compares the two characters <<actual>> and <<expected>>
- * 	If they are equal, the function returns 0
- * 	If they are not equal, the formatted message <<msg, ...>>
- * 		is printed and -1 is returned
+void execute_test(char * (*test)(), char * name);
+
+/* Below there are declarations of several helper functions,
+ * that can be used to complement assertions.
  */
-int assert_equals_char(char actual, char expected, const char * test, const char * msg, ...);
-/* This function compares the two short <<actual>> and <<expected>>
- * 	If they are equal, the function returns 0
- * 	If they are not equal, the formatted message <<msg, ...>>
- * 		is printed and -1 is returned
- */
-int assert_equals_short(short actual, short expected, const char * test, const char * msg, ...);
-/* This function compares the two long <<actual>> and <<expected>>
- * 	If they are equal, the function returns 0
- * 	If they are not equal, the formatted message <<msg, ...>>
- * 		is printed and -1 is returned
- */
-int assert_equals_long(long actual, long expected, const char * test, const char * msg, ...);
-/* This function compares the two long long <<actual>> and <<expected>>
- * 	If they are equal, the function returns 0
- * 	If they are not equal, the formatted message <<msg, ...>>
- * 		is printed and -1 is returned
- */
-int assert_equals_long_long(long long actual, long long expected, const char * test, const char * msg, ...);
 
 /* This function compares the two float <<actual>> and <<expected>>
  * with an accuracy of <<epsilon>>
- * 	If they are equal, the function returns 0
+ * 	If they are equal, the function returns 1
  * 	If they are not equal, the formatted message <<msg, ...>>
- * 		is printed and -1 is returned
+ * 		is printed and 0 is returned
  */
-int assert_equals_float(float actual, float expected, float epsilon, const char * test, const char * msg, ...);
+int equals_float(float actual, float expected, float epsilon);
 /* This function compares the two double <<actual>> and <<expected>>
  * with an accuracy of <<epsilon>>
- * 	If they are equal, the function returns 0
+ * 	If they are equal, the function returns 1
  * 	If they are not equal, the formatted message <<msg, ...>>
- * 		is printed and -1 is returned
+ * 		is printed and 0 is returned
  */
-int assert_equals_double(double actual, double expected, double epsilon, const char * test, const char * msg, ...);
+int equals_double(double actual, double expected, double epsilon);
 
-/* This function compares the two strings <<actual>> and <<expected>>
- * with an accuracy of <<epsilon>>
- * 	If they are equal, the function returns 0
- * 	If they are not equal, the formatted message <<msg, ...>>
- * 		is printed and -1 is returned
- */
-int assert_equals_str(char * actual, char * expected, const char * test, const char * msg, ...);
 /* This function compares byte by byte the memory pointed by <<actual>> and <<expected>>
  * up to a total number of <<n_bytes>> bytes
- * 	If all of the <<n_bytes>> bytes are equal, the function returns 0
+ * 	If all of the <<n_bytes>> bytes are equal, the function returns 1
  * 	If not all of the <<n_bytes>> are not equal, the formatted message <<msg, ...>>
- * 		is printed and -1 is returned
+ * 		is printed and 0 is returned
  */
-int assert_equals_ptr(void * actual, void * expected, size_t n_bytes, const char * test, const char * msg, ...);
-/* This function compares two objects passed as raw memory <<actual>> and <<expected>>,
- * using a function <<comp(void *, void *)>> passed as parameter.
- * The function <<comp(void *, void *)>> should return 0 if both of the objects passed as parameters
- * are equal, and other value otherwise
- * 	If the arguments are equal, the function returns 0
- * 	If they are not equal, the formatted message <<msg, ...>>
- * 		is printed and -1 is returned
- */
-int assert_equals_obj(void * actual, void * expected, int (* comp) (void *, void *), const char * test, const char * msg, ...);
+int equals_ptr(void * actual, void * expected, size_t n_bytes);
 
 /* This function checks whether the <<n>> bytes of memory starting at <<ptr>> can be accessed
  * without a segment violation.
- *      If said memory can be accessed, it returns 0
+ *      If said memory can be accessed, it returns 1
  * 	If SIGSEGV is received, the formatted message <<msg, ...>>
- * 		is printed and -1 is returned
+ * 		is printed and 0 is returned
  */
-int assert_mem_access(void * ptr, size_t n, const char * test, const char * msg, ...);
+int mem_access(void * ptr, size_t n);
 
 /*
  * From here below all the functions are the negated logic versions of the above
  */
 
-int assert_false(int boolean, const char * test, const char * msg, ...);
-int assert_not_equals_int(int actual, int expected, const char * test, const char * msg, ...);
-int assert_not_equals_char(char actual, char expected, const char * test, const char * msg, ...);
-int assert_not_equals_short(short actual, short expected, const char * test, const char * msg, ...);
-int assert_not_equals_long(long actual, long expected, const char * test, const char * msg, ...);
-int assert_not_equals_long_long(long long actual, long long expected, const char * test, const char * msg, ...);
+int not_equals_float(float actual, float expected, float epsilon);
+int not_equals_double(double actual, double expected, double epsilon);
 
-int assert_not_equals_float(float actual, float expected, float epsilon, const char * test, const char * msg, ...);
-int assert_not_equals_double(double actual, double expected, double epsilon, const char * test, const char * msg, ...);
+int not_equals_ptr(void * actual, void * expected, size_t n_bytes);
 
-int assert_not_equals_str(char * actual, char * expected, const char * test, const char * msg, ...);
-int assert_not_equals_ptr(void * actual, void * expected, size_t n_bytes, const char * test, const char * msg, ...);
-int assert_not_equals_obj(void * actual, void * expected, int (* comp) (void *, void *), const char * test, const char * msg, ...);
-
-int assert_not_mem_access(void * ptr, size_t n, const char * test, const char * msg, ...);
+int not_mem_access(void * ptr, size_t n);
 
 #endif
