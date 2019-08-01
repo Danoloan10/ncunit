@@ -2,15 +2,16 @@
 
 # This script runs all ncunit tests inside ./test/
 
-DATE="$(date +%Y-%m-%d-%R)";
-echo "Writing results to $DATE-test"
+DATE="$(date +%Y-%m-%d-%T)";
+echo "Writing results to $DATE-test\n"
 
 for file in test/*; do
-	echo $file >> $DATE-test
-	./$file 2>&1 | grep "\[nunit\] XX" | tee $DATE-test -a;
+	echo "$file" | tee $DATE-test -a;
+	./$file 2>&1 | tee $DATE-test -a;
 done;
 
-ERRORS=$(wc $DATE-test -l | cut -f 1 -d ' ');
+ERRORS=$(cat $DATE-test | grep "\[nunit\] XX" | wc - -l | cut -f 1 -d ' ');
+# rm $DATE-test 	uncomment this line if too many test logs annoys you
 if [ $ERRORS -eq 0 ]; then
 	exit 0;
 else

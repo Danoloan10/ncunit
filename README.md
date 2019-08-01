@@ -40,7 +40,7 @@ The results of the different tests will be shown through STDERR as follows:
 
 This output makes it easy to automate the tests using simple shell scripts.
 The script `example_script` is an example of automation that runs all the tests in `./test/` and exits with 0 if there have been no errors or 1 otherwise.
-
+ - this way, it is easily usable inside `make`.
 Installation
 -----------
 To install:
