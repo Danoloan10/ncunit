@@ -1,14 +1,20 @@
-**ncunit**
-
+ncunit
+======
 Minimal (nano) C unit testing library.
 
-This library defines a model to implement unit tests, as well as some utility functions that can be useful when doing so, like byte-by-byte comparisons of random memory (see `assert_equals_ptr`) and assertion of access to memory (see `assert_mem_access`).
+This library defines a model to implement unit tests, as well as some helper functions that might be useful when doing so, like byte-by-byte comparisons of random memory (see `equals_ptr`) and check of access to memory (see `mem_access`).
 
+You could have written this library. Now you don't have to.
+
+For further documentation, including the helper functions defined in the library, see the header file `ncunit.h`
+
+Usage
+-----
 A test is defined as a function of the form:
 ```
 char * test();
 ```
-This function shall return NULL if the test has been passed successfully, or a string representing the error message otherwise.
+This function can be named whatever, and must return NULL if the test has been passed successfully, or a string representing the error message otherwise.
 
 Inside tests, assertions may be included. Assertions are of the form:
 ```
@@ -21,12 +27,19 @@ To execute a test, simply call the function `execute_test`:
 ```
 execute_test(char * (*test)(), char * name);
 ```
-where «name» is the name of the test to be executed.
+where «test» is the function representing the test and «name» is the name of the test to be executed.
 
-The results of the different tests will be shown through STDERR.
+The results of the different tests will be shown through STDERR as follows:
+```
+[nunit] >> Test: test_1
+[nunit] $$ test_1: OK
+[nunit] >> Test: test_2
+[nunit] XX test_2: ERROR: Sample error message
+...
+```
 
--
-
+Installation
+-----------
 To install:
 ```
 sudo make install
@@ -40,7 +53,3 @@ If anything fails, first try to clean and recompile, then reinstall:
 make clean; make
 sudo make install
 ```
-
-You could have written this library. Now you don't have to.
-
-For documentation, see the header file `ncunit.h`
