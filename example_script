@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# This script runs all ncunit tests inside ./test/
+
+DATE="$(date +%Y-%m-%d-%R)";
+echo "Writing results to $DATE-test"
+
+for file in test/*; do
+	echo $file >> $DATE-test
+	./$file 2>&1 | grep "\[nunit\] XX" | tee $DATE-test -a;
+done;
+
+ERRORS=$(wc $DATE-test -l | cut -f 1 -d ' ');
+if [ $ERRORS -eq 0 ]; then
+	exit 0;
+else
+	echo "$ERRORS ERRORS"
+	exit 1;
+fi
