@@ -1,6 +1,7 @@
 #!/bin/sh
 
-# This script runs all ncunit tests inside ./test/
+# This script runs all ncunit tests inside ./test/, 
+#   and stores the output in the file ./$DATE-test
 
 DATE="$(date +%Y-%m-%d-%R)";
 echo "Writing results to $DATE-test"
