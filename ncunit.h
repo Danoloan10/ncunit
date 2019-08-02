@@ -33,31 +33,27 @@ void execute_test(char * (*test)(), char * name);
 /* This function compares the two float <<actual>> and <<expected>>
  * with an accuracy of <<epsilon>>
  * 	If they are equal, the function returns 1
- * 	If they are not equal, the formatted message <<msg, ...>>
- * 		is printed and 0 is returned
+ * 	If they are not equal, 0 is returned
  */
 int equals_float(float actual, float expected, float epsilon);
 /* This function compares the two double <<actual>> and <<expected>>
  * with an accuracy of <<epsilon>>
  * 	If they are equal, the function returns 1
- * 	If they are not equal, the formatted message <<msg, ...>>
- * 		is printed and 0 is returned
+ * 	If they are not equal, 0 is returned
  */
 int equals_double(double actual, double expected, double epsilon);
 
 /* This function compares byte by byte the memory pointed by <<actual>> and <<expected>>
  * up to a total number of <<n_bytes>> bytes
  * 	If all of the <<n_bytes>> bytes are equal, the function returns 1
- * 	If not all of the <<n_bytes>> are not equal, the formatted message <<msg, ...>>
- * 		is printed and 0 is returned
+ * 	If not all of the <<n_bytes>> are not equal, 0 is returned
  */
 int equals_ptr(void * actual, void * expected, size_t n_bytes);
 
 /* This function checks whether the <<n>> bytes of memory starting at <<ptr>> can be accessed
  * without a segment violation.
  *      If said memory can be accessed, it returns 1
- * 	If SIGSEGV is received, the formatted message <<msg, ...>>
- * 		is printed and 0 is returned
+ * 	If SIGSEGV is received, 0 is returned
  */
 int mem_access(void * ptr, size_t n);
 
