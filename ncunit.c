@@ -3,6 +3,8 @@
 #include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 static jmp_buf env;
 static void sigsegv(int sig) {
@@ -32,6 +34,7 @@ void execute_test(char * (*test)(), char * name) {
 	} else {
 		print_error(name, result);
 	}
+	free(result);
 }
 
 int equals_float(float actual, float expected, float epsilon){
@@ -46,8 +49,8 @@ int equals_double(double actual, double expected, double epsilon){
 int equals_ptr(void * actual, void * expected, size_t n_bytes) {
 	int i;
 
-	char * c_actual = (char *) actual;
-	char * c_expect = (char *) expected;
+	uint8_t * c_actual = (uint8_t *) actual;
+	uint8_t * c_expect = (uint8_t *) expected;
 	
 	for(i = 0; i < n_bytes; i++){
 		if(c_actual[i] != c_expect[i]){
@@ -65,10 +68,12 @@ int mem_access(void * ptr, size_t n){
 	act.sa_flags = 0;
 	sigaction(SIGSEGV, &act, &oact);
 
+	uint8_t * u = malloc(n);
+
 	int segv;
-	for(int i = 0; (i < n) && !(segv = setjmp(env)); i++) {
-		uint8_t u = *(((uint8_t*) ptr) + i);
-	}
+	if(!(segv = setjmp(env)))
+		memcpy(u, ptr, n);
+	free(u);
 
 	sigaction(SIGSEGV, &oact, NULL);
 	
@@ -80,46 +85,24 @@ int mem_access(void * ptr, size_t n){
 }
 
 int not_equals_float(float actual, float expected, float epsilon){
-	if(epsilon < 0) epsilon = -epsilon;
-	return actual > expected + epsilon || actual < expected - epsilon;
+	if(equals_float(actual, expected, epsilon))
+		return 0;
+	else return 1;
 }
 int not_equals_double(double actual, double expected, double epsilon){
-	if(epsilon < 0) epsilon = -epsilon;
- 	return actual > expected + epsilon || actual < expected - epsilon;
+	if(equals_double(actual, expected, epsilon))
+		return 0;
+	else return 1;
 }
 
 int not_equals_ptr(void * actual, void * expected, size_t n_bytes){
-	int i;
-
-	char * c_actual = (char *) actual;
-	char * c_expect = (char *) expected;
-	
-	for(i = 0; i < n_bytes; i++){
-		if(c_actual[i] == c_expect[i]){
-			return 0;
-		}
-	}
-
-	return 1;
+	if(equals_ptr(actual, expected, n_bytes))
+		return 0;
+	else return 1;
 }
 
 int not_mem_access(void * ptr, size_t n){
-	struct sigaction act;
-	struct sigaction oact;
-	act.sa_handler = sigsegv;
-	act.sa_flags = 0;
-	sigaction(SIGSEGV, &act, &oact);
-
-	int segv;
-	for(int i = 0; (i < n) && !(segv = setjmp(env)); i++) {
-		uint8_t u = *(((uint8_t*) ptr) + i);
-	}
-
-	sigaction(SIGSEGV, &oact, NULL);
-	
-	if(!segv) {
+	if(mem_access(ptr, n))
 		return 0;
-	}else{
-		return 1;
-	}
+	else return 1;
 }
