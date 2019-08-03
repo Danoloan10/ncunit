@@ -21,7 +21,8 @@ Inside tests, assertions may be included. Assertions are of the form:
 assert(int cond, char * msg, ...);
 ```
 where «cond» is the condition to check (the assertion will fail iff cond == 0), and «msg, ...» is the formatted message (printf style) to show when the assertion fails.
-Assertions may only be used inside tests, not anywhere in the code.
+Assertions make the test they are in return the error message when the condition is false.
+Because of this, assertions may only be used inside tests, not anywhere in the code.
 
 To execute a test, simply call the function `execute_test`:
 ```
