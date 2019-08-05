@@ -26,9 +26,10 @@ Because of this, assertions may only be used inside tests, not anywhere in the c
 
 To execute a test, simply call the function `execute_test`:
 ```
-execute_test(char * (*test)(), char * name);
+execute_test(char * (*test)(), void (*before)(), void (*after)(), char * name);
 ```
-where «test» is the function representing the test and «name» is the name of the test to be executed.
+where «test» is the function representing the test, «name» is the name of the test to be executed,
+«before» is a function to be run before the test and «after» a function to be run after the test.
 
 The results of the different tests will be shown through STDERR as follows:
 ```

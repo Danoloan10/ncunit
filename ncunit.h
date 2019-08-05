@@ -24,7 +24,7 @@
  * the error message otherwise. It is recommended to user the macro 'assert' before defined.
  * <<name>> is the name of the test run, used for output.
  */
-void execute_test(char * (*test)(), char * name);
+void execute_test(char * (*test)(), void (*before)(), void (*after)(), char * name);
 
 /* Below there are declarations of several helper functions,
  * that can be used to complement assertions.

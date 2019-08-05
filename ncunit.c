@@ -26,7 +26,9 @@ static void print_ok(const char * test) {
 	fprintf(stderr, "[nunit] $$ %s: OK\n", test);
 }
 
-void execute_test(char * (*test)(), char * name) {
+void execute_test(char * (*test)(), void (*before)(), void (*after)(), char * name) {
+	if(before != NULL) (*before)();
+
 	char * result = (*test)();
 	print_header(name);
 	if (result == NULL) {
@@ -34,7 +36,8 @@ void execute_test(char * (*test)(), char * name) {
 	} else {
 		print_error(name, result);
 	}
-	free(result);
+
+	if(after != NULL) (*after)();
 }
 
 int equals_float(float actual, float expected, float epsilon){
