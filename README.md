@@ -29,7 +29,8 @@ To execute a test, simply call the function `execute_test`:
 execute_test(char * (*test)(), void (*before)(), void (*after)(), char * name);
 ```
 where «test» is the function representing the test, «name» is the name of the test to be executed,
-«before» is a function to be run before the test and «after» a function to be run after the test.
+«before» is a function to be run before the test and «after» a function to be run after the test
+(if any of these two last arguments is NULL, they will be ignored)
 
 The results of the different tests will be shown through STDERR as follows:
 ```
