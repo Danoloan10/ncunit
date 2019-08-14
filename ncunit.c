@@ -11,10 +11,12 @@ static void sigsegv(int sig) {
 	longjmp(env, 1);
 }
 
+#ifdef NC_HEADERS
 static void print_header(const char * test) {
 	fprintf(stderr, "[nunit] >> Test: %s", test);
 	fprintf(stderr, "\n");
 }
+#endif
 
 static void print_error(const char * test, const char * msg) {
 	fprintf(stderr, "[nunit] XX %s: ERROR: ", test);
@@ -30,7 +32,9 @@ void execute_test(char * (*test)(), void (*before)(), void (*after)(), char * na
 	if(before != NULL) (*before)();
 
 	char * result = (*test)();
+#ifdef  NC_HEADERS
 	print_header(name);
+#endif
 	if (result == NULL) {
 		print_ok(name);
 	} else {
