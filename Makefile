@@ -1,7 +1,5 @@
 libncunit.a: ncunit.o
 	ar rc $@ ncunit.o
-ncunit.o: ncunit.c
-	gcc -c ncunit.c -o ncunit.o -Wall
 clean:
 	rm ncunit.o libncunit.a
 install: libncunit.a ncunit.h

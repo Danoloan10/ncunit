@@ -34,15 +34,22 @@ where «test» is the function representing the test, «name» is the name of th
 
 The results of the different tests will be shown through STDERR as follows:
 ```
-[nunit] >> Test: test_1
 [nunit] $$ test_1: OK
-[nunit] >> Test: test_2
 [nunit] XX test_2: ERROR: Sample error message
 ...
 ```
 
 This output makes it easy to automate the tests using simple shell scripts.
 The script `example_script` is an example of automation that runs all the tests in `./test/` and exits with 0 if there have been no errors or 1 otherwise - this way, it is easily usable inside `make`.
+
+The library can also be compiled so that headers are printed in the output (see Installation). In this case, the ouput will be as shown below:
+```
+[nunit] >> Test: test_1
+[nunit] $$ test_1: OK
+[nunit] >> Test: test_2
+[nunit] XX test_2: ERROR: Sample error message
+...
+```
 
 Installation
 -----------
@@ -58,4 +65,8 @@ If anything fails, first try to clean and recompile, then reinstall:
 ```
 make clean; make
 sudo make install
+```
+To make the library show headers in the output, before installing run make as follows:
+```
+make CFLAGS='-DNC_HEADERS'
 ```
