@@ -14,7 +14,7 @@ A test is defined as a function of the form:
 ```
 char * test();
 ```
-This function can be named whatever, and must return NULL if the test has been passed successfully, or a string representing the error message otherwise.
+This function can be named whatever, and must return NULL if the test has been passed successfully. Assertions may be used to make the test fail given the desired circumstances.
 
 Inside tests, assertions may be included. Assertions are of the form:
 ```

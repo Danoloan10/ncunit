@@ -35,6 +35,7 @@ void execute_test(char * (*test)(), void (*before)(), void (*after)(), char * na
 		print_ok(name);
 	} else {
 		print_error(name, result);
+		free(name);
 	}
 
 	if(after != NULL) (*after)();
