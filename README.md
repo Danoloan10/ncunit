@@ -77,4 +77,6 @@ Examples are included in the «examples» folder. To compile them, run:
 ```
 make example
 ```
+There is an example script that could be used in a makefile to automate the tests.
+
 The source of the examples is in the «examples/src» folder.
