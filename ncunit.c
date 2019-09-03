@@ -39,7 +39,6 @@ void execute_test(const char * (*test)(), void (*before)(), void (*after)(), con
 		print_ok(name);
 	} else {
 		print_error(name, result);
-		free(name);
 	}
 
 	if(after != NULL) (*after)();
