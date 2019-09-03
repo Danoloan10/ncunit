@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #ifndef ERROR_MAX
 	#define ERROR_MAX 256
