@@ -40,7 +40,6 @@ The results of the different tests will be shown through STDERR as follows:
 ```
 
 This output makes it easy to automate the tests using simple shell scripts.
-The script `example_script` is an example of automation that runs all the tests in `./test/` and exits with 0 if there have been no errors or 1 otherwise - this way, it is easily usable inside `make`.
 
 The library can also be compiled so that headers are printed in the output (see Installation). In this case, the ouput will be as shown below:
 ```
@@ -70,3 +69,12 @@ To make the library show headers in the output, before installing run make as fo
 ```
 make CFLAGS='-DNC_HEADERS'
 ```
+
+Examples
+--------
+
+Examples are included in the «examples» folder. To compile them, run:
+```
+make example
+```
+The source of the examples is in the «examples/src» folder.

@@ -1,0 +1,5 @@
+test/dummy
+./example_script: 11: ./example_script: ./test/dummy: Permission denied
+test/example
+[nunit] $$ ok: OK
+[nunit] XX nok: ERROR: obtained: 1, expected: 3

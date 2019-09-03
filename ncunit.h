@@ -1,8 +1,15 @@
 #ifndef NUNIT
 #define NUNIT
 
+#include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h>
+
+#ifndef ERROR_MAX
+	#define ERROR_MAX 256
+#endif
+
+char __msg [ERROR_MAX];
 
 /*
  * This macro defines an assertion.
@@ -11,7 +18,7 @@
 #define assert(cond, ...) { \
 	if(!cond) { \
 		int __size = snprintf(NULL, 0, __VA_ARGS__); \
-		char * __msg = malloc(__size + 1); \
+		if (__size > ERROR_MAX) return "error message too long"; \
 		sprintf(__msg, __VA_ARGS__); \
 		return __msg; \
 	} \
@@ -24,7 +31,7 @@
  * the error message otherwise. It is recommended to user the macro 'assert' before defined.
  * <<name>> is the name of the test run, used for output.
  */
-void execute_test(char * (*test)(), void (*before)(), void (*after)(), char * name);
+void execute_test(const char * (*test)(), void (*before)(), void (*after)(), const char * name);
 
 /* Below there are declarations of several helper functions,
  * that can be used to complement assertions.

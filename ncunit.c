@@ -28,10 +28,10 @@ static void print_ok(const char * test) {
 	fprintf(stderr, "[nunit] $$ %s: OK\n", test);
 }
 
-void execute_test(char * (*test)(), void (*before)(), void (*after)(), char * name) {
+void execute_test(const char * (*test)(), void (*before)(), void (*after)(), const char * name) {
 	if(before != NULL) (*before)();
 
-	char * result = (*test)();
+	const char * result = (*test)();
 #ifdef  NC_HEADERS
 	print_header(name);
 #endif
